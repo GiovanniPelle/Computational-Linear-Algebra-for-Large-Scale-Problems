@@ -89,7 +89,8 @@ for j=1:size(Adiacence2,1)
     norm = sum(Adiacence2(indices,:), 2)';        % number of outgoing links from pages selected
     A2(j,indices) = 1./norm;   % formula 2.1
 end
-
+disp('Link Matrix:')
+disp(A2)
 [eigenvectors_2, eigenvalues_2] = eig(A2, 'vector');
 disp('Eigenvalues: ')
 disp(eigenvalues_2) % Presence of more than one eigenvalue equal to 1 => dimension of V(A) > 1
@@ -112,7 +113,8 @@ for j=1:size(Adiacence3,1)
     norm = sum(Adiacence3(indices,:), 2)';        % number of outgoing links from pages selected
     A3(j,indices) = 1./norm;   % formula 2.1
 end
-
+disp('Link Matrix:')
+disp(A3)
 [eigenvectors_3, eigenvalues_3] = eig(A3, 'vector');
 disp('Eigenvalues: ')
 disp(eigenvalues_3) 
@@ -139,10 +141,12 @@ for j=1:size(Adiacence4,1)
     A4(j,indices) = 1./norm;   % formula 2.1
 end
 
+disp('Link Matrix:')
+disp(A4)
 [eigenvectors_4, eigenvalues_4] = eig(A4, 'vector');
 [perron_eigenvalue, ind_perron] = max(eigenvalues_4);
 disp('Perron eigenvalue: ')
-disp(perron_eigenvalue) % Presence of more than one eigenvalue equal to 1 bring a dimension of V(A) > 1
+disp(perron_eigenvalue)
 perron_eigenvector = abs(eigenvectors_4(:,ind_perron))/sum(abs(eigenvectors_4(:,ind_perron)));
 disp('Perron eigenvector: ')
 disp(perron_eigenvector)
@@ -185,6 +189,9 @@ n_11 = size(A11,1);
 S_11 = 1/n_11 * ones(n_11,n_11);
 M11 = (1-m)*A11 + m*S_11;
 
+disp("Matrix M11:")
+disp(M11)
+
 [eigenvectors_11, eigenvalues_11] = eig(M11, 'vector');
 
 [~, ind_one] = min(abs(eigenvalues_11-1));
@@ -214,18 +221,30 @@ for j=1:size(Adiacence12,1)
     A12(j,indices) = 1./norm;   % formula 2.1
 end
 
+disp("Matrix A12:")
+disp(A12)
 m = 0.15;
 n_12 = size(A12,1);
 S_12 = 1/n_12 * ones(n_12,n_12);
 M12 = (1-m)*A12 + m*S_12;
+disp("Matrix M12:")
+disp(M12)
 
-[eigenvectors_12, eigenvalues_12] = eig(M12, 'vector');
-[~, ind_one] = min(abs(eigenvalues_12-1));
-norm_eig_12 = sum(eigenvectors_12(:,ind_one));
-rank_pages_12 = (M12 * eigenvectors_12(:,ind_one))/norm_eig_12;
+[eigenvectors_A12, eigenvalues_A12] = eig(A12, 'vector');
+[~, ind_one] = min(abs(eigenvalues_A12-1));
+norm_eig_A12 = sum(eigenvectors_A12(:,ind_one));
+rank_pages_A12 = (A12 * eigenvectors_A12(:,ind_one))/norm_eig_A12;
+disp('Eigenvector of matrix A corresponding to eigenvalue 1:')
+disp(rank_pages_A12)
+
+
+[eigenvectors_M12, eigenvalues_M12] = eig(M12, 'vector');
+[~, ind_one] = min(abs(eigenvalues_M12-1));
+norm_eig_M12 = sum(eigenvectors_M12(:,ind_one));
+rank_pages_M12 = (M12 * eigenvectors_M12(:,ind_one))/norm_eig_M12;
 
 disp('Eigenvector of matrix M corresponding to eigenvalue 1:')
-disp(rank_pages_12)
+disp(rank_pages_M12)
 %% Exercise 13
 disp('%%%%% Exercise 13 %%%%%')
 
@@ -234,13 +253,16 @@ n_13 = size(A13,1);
 S_13 = 1/n_13 * ones(n_13,n_13);
 M13 = (1-m)*A13 + m*S_13;
 
-[eigenvectors_13, eigenvalues_13] = eig(M13, 'vector');
-[~, ind_one] = min(abs(eigenvalues_13-1));
-norm_eig_13 = sum(eigenvectors_13(:,ind_one));
-rank_pages_13 = (M13 * eigenvectors_13(:,ind_one))/norm_eig_13;
+disp("Matrix M13:")
+disp(M13)
+
+[eigenvectors_M13, eigenvalues_M13] = eig(M13, 'vector');
+[~, ind_one] = min(abs(eigenvalues_M13-1));
+norm_eig_M13 = sum(eigenvectors_M13(:,ind_one));
+rank_pages_M13 = (M13 * eigenvectors_M13(:,ind_one))/norm_eig_M13;
 
 disp('Eigenvector of matrix M corresponding to eigenvalue 1:')
-disp(rank_pages_13)
+disp(rank_pages_M13)
 %% Exercise 14
 % for k = 1, 5, 10, 50, using an initial guess x0 not too close to the 
 % actual eigenvector q (so that you can watch the convergence). 
@@ -297,11 +319,43 @@ fprintf("value of c: %.3f\n", c)
 % Show that M = (1 − m)A + mS (all Sij = 1/3) is not diagonalizable 
 % for 0 ≤ m < 1
 
+disp('%%%%% Exercise 16 %%%%%')
+% Define the matrices A16 and S16
 A16 = [0 1/2 1/2;
-    0 0 1/2;
-    1 1/2 0];
+       0 0 1/2;
+       1 1/2 0];
 
 syms m16;
 S16 = 1/3 * ones(3,3);
 M16 = (1-m16)*A16 + m16*S16;
+disp("Matrix M16:")
+disp(M1S6)
+[eigenvectors_M16, eigenvalues_M16] = eig(M16);
+eigenvalues_vector = diag(eigenvalues_M16);
 
+% algebraic multiplicities
+[unique_eigenvalues, ~, index] = unique(eigenvalues_vector);
+algebraic_multiplicities = histc(index, unique(index));
+
+for i = 1:length(unique_eigenvalues)
+    
+    % Get the current eigenvalue and its algebraic multiplicity
+    eigenvalue = unique_eigenvalues(i);
+    multiplicity = algebraic_multiplicities(i);
+    
+    corresponding_indices = find(eigenvalues_vector == eigenvalue, 1);
+    corresponding_eigenvectors = eigenvectors_M16(:, corresponding_indices);
+    
+    % geometric multiplicity
+    null_space = null(M16 - eigenvalue * eye(size(M16)));
+    geometric_multiplicity = size(null_space, 2);
+    
+    % Convert eigenvalue to string for display
+    eigenvalue_str = char(eigenvalue);
+    
+    disp(['Eigenvalue: ', eigenvalue_str, ...
+          ', Algebraic multiplicity: ', num2str(multiplicity), ...
+          ', Geometric multiplicity: ', num2str(geometric_multiplicity), ...
+          ', corresponding eigenvector(s):']);
+    disp(corresponding_eigenvectors);
+end
