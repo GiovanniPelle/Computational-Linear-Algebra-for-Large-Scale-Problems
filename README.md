@@ -35,7 +35,3 @@ This repository contains homework assignments for the course "Computational Line
   ```bash
   pip install -r requirements.txt
   ```
-
-## License
-
-This project is licensed under the MIT License.
